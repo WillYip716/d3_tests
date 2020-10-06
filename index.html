@@ -1,10 +1,17 @@
 <html>
     <meta charset="utf-8"/>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
     <script src="main.js"></script>
 
     
-    
+    <body>
+        <form onsubmit="compileLines(); return false;">
+            <label for="inputarea">Enter Lines:</label><br>
+            <textarea style="width:70%;height:250px" id="inputarea" name="inputarea"></textarea><br>   
+            <input type="submit" value="Submit">
+        </form> 
+    </body>
 
 
 </html>
