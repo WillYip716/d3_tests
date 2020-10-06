@@ -1,64 +1,87 @@
 function graph(){
-    const dataset = [
-                  [ 34,     78 ],
-                  [ 109,   280 ],
-                  [ 310,   120 ],
-                  [ 79,   411 ],
-                  [ 420,   220 ],
-                  [ 233,   145 ],
-                  [ 333,   96 ],
-                  [ 222,    333 ],
-                  [ 78,    320 ],
-                  [ 21,   123 ]
-                ];
 
-    const w = 500;
-    const h = 500;
-    const padding = 60;
+   let headerparser = new RegExp(/([A-Za-z ]*)\s([A-Za-z ]*)\s([A-Za-z ]*)/);
+   let bodyparser = new RegExp(/([A-Za-z ]*)\s([0-9.]*)\s([0-9.]*)/);
 
-    const xScale = d3.scaleLinear()
-                     .domain([0, d3.max(dataset, (d) => d[0])])
-                     .range([padding, w - padding]);
+   let data = document.getElementById("inputarea").value.split("\n");
 
-    const yScale = d3.scaleLinear()
-                     .domain([0, d3.max(dataset, (d) => d[1])])
-                     .range([h - padding, padding]);
+   
+   console.log(data);
 
-    const svg = d3.select("body")
-                  .append("svg")
-                  .attr("width", w)
-                  .attr("height", h);
+   let headers = data.shift().match(headerparser);
+   console.log(headers);
+   let dataset=[];
+   for(var i=0;i<data.length;i++){
+      dataset.push(data[i].match(bodyparser));
+   }
 
-    svg.selectAll("circle")
-       .data(dataset)
-       .enter()
-       .append("circle")
-       .attr("cx", (d) => xScale(d[0]))
-       .attr("cy",(d) => yScale(d[1]))
-       .attr("r", (d) => 5);
+   console.log(dataset);
+   
 
-    svg.selectAll("text")
-       .data(dataset)
-       .enter()
-       .append("text")
-       .text((d) =>  (d[0] + "," + d[1]))
-       .attr("x", (d) => xScale(d[0] + 10))
-       .attr("y", (d) => yScale(d[1]))
+   const w = 600;
+   const h = 600;
+   const padding = 50;
 
-    const xAxis = d3.axisBottom(xScale);
-    // Add your code below this line
-    const yAxis = d3.axisLeft(yScale);
-    // Add your code above this line
+   const xScale = d3.scaleLinear()
+                  .domain([0, d3.max(dataset, (d) => d[2]+50)])
+                  .range([padding, w - padding]);
 
-    svg.append("g")
-       .attr("transform", "translate(0," + (h - padding) + ")")
-       .call(xAxis);
+   const yScale = d3.scaleLinear()
+                  .domain([0, d3.max(dataset, (d) => parseInt(d[3])+50)])
+                  .range([h - padding, padding]);
 
-    // Add your code below this line
+   const svg = d3.select("body")
+               .append("svg")
+               .attr("width", w)
+               .attr("height", h);
 
-    svg.append("g")
-       .attr("transform", "translate("+padding+",0)")
-       .call(yAxis);
+   svg.selectAll("circle")
+      .data(dataset)
+      .enter()
+      .append("circle")
+      .attr("cx", (d) => xScale(d[2]))
+      .attr("cy",(d) => yScale(d[3]))
+      .attr("r", (d) => 5);
+
+   svg.selectAll("text")
+      .data(dataset)
+      .enter()
+      .append("text")
+      .text((d) =>  (d[0]))
+      .attr("x", (d) => xScale(d[2] + 20))
+      .attr("y", (d) => yScale(d[3]))
+
+   const xAxis = d3.axisBottom(xScale);
+   // Add your code below this line
+   const yAxis = d3.axisLeft(yScale);
+   // Add your code above this line
+
+   svg.append("g")
+      .attr("transform", "translate(0," + (h - padding) + ")")
+      .call(xAxis);
+
+   // Add your code below this line
+
+   svg.append("g")
+      .attr("transform", "translate("+padding+",0)")
+      .call(yAxis);
+
+
+      svg.append("text")
+      .attr("class", "y label")
+      .attr("text-anchor", "end")
+      .attr("y", 6)
+      .attr("dy", ".50em")
+      .attr("x", 0-(h/2))
+      .attr("transform", "rotate(-90)")
+      .text(headers[3]);
+
+      svg.append("text")
+      .attr("class", "x label")
+      .attr("text-anchor", "end")
+      .attr("x", w/2)
+      .attr("y", h - 6)
+      .text(headers[2]);
 
 
 
